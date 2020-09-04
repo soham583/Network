@@ -1,0 +1,53 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+    <h1 align="center">Following</h1>
+    <div class="container" style="padding-left:60px;padding-top:30px">
+        <div id="posts">
+        {% for post in page_obj %}
+            <div><a href="{% url 'profile' userq=post.userp.id %}" >{{ post.userp }}</a></div>
+            <div id="{{ post.id }}c">{{ post.content }}</div>
+            <div>{{ post.timestamp }}</div>
+            <div id="post_name">
+                {% if request.user in post.userl.all %}
+                <a class="likeu" style="cursor: pointer"><span id="{{ post.id }}" class="likeu1" style="font-size:24px;color:red">&hearts;</span></a>
+                {% else %}
+                <a class="likeu" style="cursor: pointer"><span id="{{ post.id }}" class="likeu1" style="font-size:24px;color:grey">&hearts;</span></a>
+                {% endif %}
+                <p id="{{ post.id }}l">{{ post.userl.all.count }}</p>
+            </div>
+            <hr>
+        {% endfor %}
+      </div>
+    </div>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+
+           {% if page_obj.has_previous %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled="false" >Previous</a>
+                </li>
+           {% else %}
+                <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true" >Previous</a>
+                </li>
+            {% endif %}
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+          {% endif %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+          {% endif %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                <a class="page-link" href="#" aria-disabled="true">Next</a>
+                </li>
+            {% endif %}
+      </ul>
+    </nav>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+<hr>
+{{ error1 }}
+<div class="container">
+    {% if user.is_authenticated %}
+    <div id="addpost">
+      <h3>New Post
+      </h3>
+      <form action="{% url 'post' %}" method="post">
+          <div id = "post-error">{{ error }}
+          </div>
+          <textarea name="postc" rows="2" style="width:100%"></textarea>
+          <input type="submit" value="Post" class="btn btn-primary" id="addpostb">
+      </form>
+    </div>
+    {% endif %}
+    <hr>
+    <div id="posts">
+        {% for post in page_obj %}
+        <div><a href="{% url 'profile' userq=post.userp.id %}" >{{ post.userp }}</a></div>
+        <div id="{{ post.id }}c">{{ post.content }}</div>
+        {% if post.userp == request.user %}
+            <button type="button" style="margin-left:-12px" class="btn btn-link" id="{{ post.id }}m" name="edit">Edit</button>
+        {% endif %}
+        <div id="{{ post.id }}e" class="texed">
+            <textarea id="{{ post.id }}e1"></textarea>
+            <input type="submit" value="Save" class="btn btn-primary" id="{{ post.id }}s">
+        </div>
+        <div>{{ post.timestamp }}</div>
+            <div id="post_name">
+                {% if request.user in post.userl.all %}
+                <a class="likeu" style="cursor: pointer;display:inline-block"><span id="{{ post.id }}" class="likeu1" style="font-size:24px;color:red">&hearts;</span></a>
+                {% else %}
+                <a class="likeu" style="cursor: pointer;display:inline-block"><span id="{{ post.id }}" class="likeu1" style="font-size:24px;color:grey">&hearts;</span></a>
+                {% endif %}
+                <p id="{{ post.id }}l" style="vertical-align: baseline;display:inline-block">{{ post.userl.all.count }}</p>
+            </div>
+        <hr>
+        {% endfor %}
+      </div>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+
+           {% if page_obj.has_previous %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled="false" >Previous</a>
+                </li>
+           {% else %}
+                <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true" >Previous</a>
+                </li>
+            {% endif %}
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+          {% endif %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+          {% endif %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                <a class="page-link" href="#" aria-disabled="true">Next</a>
+                </li>
+            {% endif %}
+      </ul>
+    </nav>
+</div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
+{% endblock %}
+
+
+
+
+

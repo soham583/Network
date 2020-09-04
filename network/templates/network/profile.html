@@ -1,0 +1,56 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+    <div class="container" align="center" style="padding:50px">
+        <div style="padding:20px;border:2px solid;border-color:#03bafc;border-radius:10px">
+            <h3>{{ usera.username }}</h3>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-2">
+                    <p><strong>Followers</strong></p>
+                    <p id="follno1" style="margin-top:-20px">{{ follow1.count }}</p>
+                </div>
+                <div class="col-2">
+                    <p><strong>Following</strong></p>
+                    <p id="follno2" style="margin-top:-20px">{{ follow2.count }}</p>
+                </div>
+                <div class="col-4"></div>
+            </div>
+            {% if user.is_authenticated and request.user != usera %}
+                {% if m %}
+                    <button name="follow" id="{{ usera.id }}" type="button" class="btn btn-danger">Unfollow</button>
+                {% else %}
+                    <button name="follow" id="{{ usera.id }}" type="button" class="btn btn-success">Follow</button>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="container">
+        <div>
+            {% for post in posts %}
+                <div><a href="{% url 'profile' userq=post.userp.id %}" >{{ post.userp }}</a></div>
+                <div id="{{ post.id }}c">{{ post.content }}</div>
+                {% if post.userp == request.user %}
+                    <button type="button" style="margin-left:-12px" class="btn btn-link" id="{{ post.id }}m" name="edit">Edit</button>
+                {% endif %}
+                <div id="{{ post.id }}e" class="texed">
+                    <textarea id="{{ post.id }}e1"></textarea>
+                    <input type="submit" value="Save" class="btn btn-primary" id="{{ post.id }}s">
+                </div>
+                <div>{{ post.timestamp }}</div>
+                    <div id="post_name">
+                        {% if request.user in post.userl.all %}
+                        <a class="likeu" style="cursor: pointer;display:inline-block"><span id="{{ post.id }}" class="likeu1" style="font-size:24px;color:red">&hearts;</span></a>
+                        {% else %}
+                        <a class="likeu" style="cursor: pointer;display:inline-block"><span id="{{ post.id }}" class="likeu1" style="font-size:24px;color:grey">&hearts;</span></a>
+                        {% endif %}
+                        <p id="{{ post.id }}l" style="vertical-align: baseline;display:inline-block">{{ post.userl.all.count }}</p>
+                    </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'network/profile.js' %}"></script>
+{% endblock %}
